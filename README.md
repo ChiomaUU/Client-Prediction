@@ -1,4 +1,3 @@
-# Client-Prediction
 # IFSSAA Client Retention Model
 
 ## Overview
