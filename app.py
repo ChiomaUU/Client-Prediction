@@ -11,7 +11,7 @@ from sklearn.inspection import PartialDependenceDisplay
 @st.cache_resource
 def load_model():
     try:
-        model = joblib.load("model_top5(1).pkl")
+        model = joblib.load("model_top5.pkl")
         st.success("✅ Model loaded successfully!")
         return model
     except Exception as e:
