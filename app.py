@@ -19,7 +19,7 @@ except ImportError:
 @st.cache_resource
 def load_model():
     try:
-        model = joblib.load("model_top5.pkl")
+        model = joblib.load("model_top4.pkl")
         st.success("✅ Model loaded successfully!")
         
         # Debug: Show model structure
@@ -39,9 +39,11 @@ model = load_model()
 
 # Define only the top 5 features
 REQUIRED_COLUMNS = [
-    "total_visits",
+    
     "month",
+    "total_visits",
     "avg_days_between_pickups",
+    "days_since_last_pickup"
 ]
 
 # Function to preprocess input data
@@ -223,23 +225,29 @@ def predictions_page():
     # User input fields
     col1, col2 = st.columns(2)
     with col1:
-        total_visits = st.number_input("Total Visits", min_value=1, max_value=100, step=1, value=5)
         month = st.number_input("Month", min_value=1, max_value=12, step=1, value=6)
+        total_visits = st.number_input("Total Visits", min_value=1, max_value=100, step=1, value=5)
+        
     with col2:
         avg_days_between_pickups = st.number_input("Avg Days Between Pickups", 
                                                 min_value=1.0, max_value=100.0, 
                                                 step=0.1, value=30.0)
+        days_since_last_pickup = st.number_input("Days Since Last Pickup", 
+                                                min_value=1.0, max_value=100.0, 
+                                                step=0.1, value=30.0)
     
     input_data = {
+        "month": month,
         "total_visits": total_visits,
         "avg_days_between_pickups": avg_days_between_pickups,
-        "month": month,
+        "days_since_last_pickup": days_since_last_pickup
+        
     }
     
     # Prediction button
     if st.button("Predict"):
         if model is None:
-            st.error("Model not loaded. Please check if 'model_top5.pkl' exists.")
+            st.error("Model not loaded. Please check if 'model_top4.pkl' exists.")
         else:
             input_df = preprocess_input(input_data)
             prediction = model.predict(input_df)
