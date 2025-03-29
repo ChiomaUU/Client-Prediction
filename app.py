@@ -20,7 +20,7 @@ except ImportError:
 def load_model():
     try:
         model = joblib.load("model_top4.pkl")
-        #st.success("✅ Model loaded successfully!")
+        st.success("✅ Model loaded successfully!")
         
         # Debug: Show model structure
         if st.session_state.get('debug', False):
