@@ -28,16 +28,14 @@ Seven classification models were evaluated:
 7. XGBoost
 
 ### Best Performing Model
-**XGBoost** achieved the highest F1-score of **0.9269** and was selected for further optimization.
+**CatBoost** achieved the highest F1-score of **0.9269** and was selected for further optimization.
 
 ### Hyperparameter Tuning
-RandomizedSearchCV was used to fine-tune XGBoost, resulting in the following optimal parameters:
-- `subsample`: 0.8
-- `n_estimators`: 200
-- `max_depth`: 7
-- `learning_rate`: 0.01
-- `gamma`: 0.2
-- `colsample_bytree`: 0.9
+RandomizedSearchCV was used to fine-tune CatBoost, resulting in the following optimal parameters:
+- 'classifier__learning_rate': 0.05500000000000001,
+- 'classifier__l2_leaf_reg': 5,
+- 'classifier__iterations': 1000,
+- 'classifier__depth': 8
 
 The tuned model achieved an F1-score of **0.9292** on the test set.
 
