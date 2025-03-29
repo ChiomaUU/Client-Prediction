@@ -64,7 +64,7 @@ SHAP (SHapley Additive exPlanations) was used to interpret the model's predictio
    ```
 
 ## Files
-- `best_xgboost_model.pkl`: Saved tuned XGBoost model.
+- `best_catboost_model.pkl`: Saved tuned CatBoost model.
 - `model_top5.pkl`: Model trained on top 5 features.
 - `feature_importances.csv`: Feature importance rankings.
 - `app.py`: Streamlit application script.
