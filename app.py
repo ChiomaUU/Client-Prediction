@@ -1,3 +1,5 @@
+ 
+
 import streamlit as st
 import pandas as pd
 import joblib
@@ -6,6 +8,49 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.inspection import PartialDependenceDisplay
+import google.generativeai as genai
+import PyPDF2
+
+
+# Access the API key from Streamlit secrets
+api_key = st.secrets["api_keys"]["GOOGLE_API_KEY"]
+
+# Configure the API key
+genai.configure(api_key=api_key)
+
+# Loading dataset
+df1 = pd.read_csv("df.csv")  # Update with your actual dataset file
+
+# Function to extract text from a preloaded PDF
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    try:
+        with open(pdf_path, "rb") as pdf_file:
+            reader = PyPDF2.PdfReader(pdf_file)
+            for page in reader.pages:
+                text += page.extract_text() + "\n"
+    except Exception as e:
+        st.error(f"Error reading PDF: {e}")
+    return text
+
+# Preload the PDF
+pdf_path = "IFSSA and Insights.pdf"  # Update with your actual PDF file
+pdf_text = extract_text_from_pdf(pdf_path)
+
+# Function to generate response from the model
+def generate_response(prompt, context):
+    try:
+        model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
+        
+        # Remove explicit source references from context if necessary
+        cleaned_context = context.replace("PDF Content:", "").replace("Dataset 1 Preview:", "")
+        
+        # Generate content based on the cleaned context
+        response = model.generate_content(f"{prompt}\n\nContext:\n{cleaned_context}")
+        return response.text
+    except Exception as e:
+        st.error(f"Error generating response: {e}")
+        return "Sorry, I couldn't process your request."
 
 # Check for SHAP library
 try:
@@ -60,7 +105,9 @@ def preprocess_input(input_data):
     return input_df
 
 def exploratory_data_analysis():
-    st.title("Hamper Collection Insights")
+    
+    st.markdown('<h1 style="color:#E09963; font-size: 2.5em;">Hamper Collection Insights</h1>', unsafe_allow_html=True)
+    #st.title("Hamper Collection Insights")
     st.subheader("Power BI Visualization")
     powerbi_url = "https://app.powerbi.com/view?r=eyJrIjoiMTE4Y2JiYWQtMzNhYS00NGFiLThmMDQtMmIwMDg4YTIzMjI5IiwidCI6ImUyMjhjM2RmLTIzM2YtNDljMy05ZDc1LTFjZTI4NWI1OWM3OCJ9"
     st.components.v1.iframe(powerbi_url, width=800, height=600)
@@ -219,7 +266,8 @@ def show_confidence_analysis(probability):
         st.write("The model has moderate confidence. Consider verifying with additional client information.")
 
 def predictions_page():
-    st.title("Hamper Return Prediction App")
+    st.markdown('<h1 style="color:#275D43; font-size: 2.5em;">Hamper Return Prediction</h1>', unsafe_allow_html=True)
+    #st.title("Hamper Return Prediction App")
     st.write("Enter details to predict if a client will return.")
     
     # User input fields
@@ -281,12 +329,75 @@ def predictions_page():
                 - **Incentives:** Offer additional support if appropriate
                 - **Feedback:** Learn why they might not be returning
                 """)
+def chatbox():
+    # Function to extract text from a preloaded PDF
+    
+ 
+    def extract_text_from_pdf(pdf_path):
+        text = ""
+        try:
+            with open(pdf_path, "rb") as pdf_file:
+                reader = PyPDF2.PdfReader(pdf_file)
+                for page in reader.pages:
+                    text += page.extract_text() + "\n"
+        except Exception as e:
+            st.error(f"Error reading PDF: {e}")
+        return text
+
+    # Preload the PDF
+    pdf_path = "IFSSA and Insights.pdf"  # Update with your actual PDF file
+    pdf_text = extract_text_from_pdf(pdf_path)
+    if not pdf_text:
+        pdf_text = ""  # Ensure pdf_text is an empty string if extraction fails
+
+    # Function to generate response from the model
+    def generate_response(prompt, context):
+        try:
+            model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
+            # Remove explicit source references from context if necessary
+            cleaned_context = context.replace("PDF Content:", "").replace("Dataset 1 Preview:", "")
+            # Generate content based on the cleaned context
+            response = model.generate_content(f"{prompt}\n\nContext:\n{cleaned_context}")
+            return response.text
+        except Exception as e:
+            st.error(f"Error generating response: {e}")
+            return "Sorry, I couldn't process your request."
+
+    #st.title("IFSSA Retention Chatbot")
+    st.markdown('<h1 style="color:#E09963; font-size: 2.5em;">IFSSA Retention Chatbot</h1>', unsafe_allow_html=True)
+    st.write("Ask questions based on your datasets.")
+
+    # Create context from dataset
+    context = "\nDataset 1 Preview:\n" + df1.head(5).to_string()
+    context += "\n\nPDF Content:\n" + pdf_text[:2000]  # Limit text for efficiency
+
+    # Initialize chat history if not already initialized
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    # User input
+    user_input = st.text_input("Ask a question about our data:", key="input")
+
+    # If user presses "Send", process the question
+    if st.button("Send"):
+        if user_input:
+            # Store user message at the top of the chat history
+            st.session_state.chat_history.insert(0, {"role": "user", "content": user_input})
+            # Generate response from the model
+            response = generate_response(user_input, context)
+            # Store assistant response below the user message
+            st.session_state.chat_history.insert(1, {"role": "assistant", "content": response})
+
+    # Display chat history, with most recent messages on top
+    for message in st.session_state.chat_history:
+        st.write(f"**{message['role'].capitalize()}**: {message['content']}")
 
 def dashboard():
+    st.markdown('<h1 style="color:#275D43; font-size: 2.5em;">Hamper Return Prediction App</h1>', unsafe_allow_html=True)
     header_image_url = "https://raw.githubusercontent.com/ChiomaUU/Client-Prediction/refs/heads/main/ifssa_2844cc71-4dca-48ae-93c6-43295187e7ca.avif"
     st.image(header_image_url, use_container_width=True)
 
-    st.title("Hamper Return Prediction App")
+    #st.title("Hamper Return Prediction App")
     st.write("This app predicts whether a client will return for food hampers using machine learning.")
     
     st.markdown("""
@@ -297,6 +408,7 @@ def dashboard():
     """)
     
     st.markdown("""
+ 
     ### How It Works:
     1. Navigate to the **Predictions** page
     2. Enter client details
@@ -305,9 +417,10 @@ def dashboard():
     """)
 
 def main():
+
     st.sidebar.title("Navigation")
-    app_page = st.sidebar.radio("Choose a page", ["Dashboard", "Insights", "Predictions"])
-    
+    app_page = st.sidebar.radio("Choose a page", ["Dashboard", "Insights", "Predictions", "Chatbox"])
+
     # Debug toggle
     if st.sidebar.checkbox("Debug mode"):
         st.session_state.debug = True
@@ -320,6 +433,8 @@ def main():
         exploratory_data_analysis()
     elif app_page == "Predictions":
         predictions_page()
+    elif app_page == "Chatbox":
+        chatbox()
 
     # Add footer
     st.sidebar.markdown("---")
@@ -332,3 +447,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#st.markdown("""
+     #   <style>
+      #  .stApp {
+       #     #background-color: #ffffff;
+        #    background-color: #E09965
+         #   color: #333333;
