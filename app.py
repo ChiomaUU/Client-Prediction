@@ -268,36 +268,9 @@ def show_confidence_analysis(probability):
         st.warning("⚠️ Medium confidence prediction")
         st.write("The model has moderate confidence. Consider verifying with additional client information.")
 
-def print_prediction_summary(model, input_data, required_columns, shap_explainer):
-    # Ensure the input_data is in the correct format (DataFrame with required columns)
-    input_df = pd.DataFrame(input_data, columns=required_columns)
-
-    # Predict the class probabilities
-    prediction_probs = model.predict_proba(input_df)  # Assuming model.predict_proba() for classification
-    prediction_class = model.predict(input_df)
-
-    # Print the features and their values
-    print("Feature Values:")
-    print(input_df)
-
-    # Print the prediction probability for each class
-    print("\nPrediction Probability:")
-    print(f"Class probabilities: {prediction_probs}")
-
-    # Print the predicted class
-    print(f"\nPredicted Class: {prediction_class}")
-
-    # Calculate and print SHAP feature importance
-    shap_values = shap_explainer.shap_values(input_df)
-    print("\nLocal Feature Importance (SHAP values):")
-    shap.summary_plot(shap_values, input_df)  # Display SHAP summary plot
-
-    # Alternatively, you can print the SHAP values directly
-    for i, feature in enumerate(required_columns):
-        print(f"Feature: {feature}, SHAP Value: {shap_values[0][i]}")
-
 def predictions_page():
     st.markdown('<h1 style="color:#275D43; font-size: 2.5em;">Hamper Return Prediction</h1>', unsafe_allow_html=True)
+    #st.title("Hamper Return Prediction App")
     st.write("Enter details to predict if a client will return.")
     
     # User input fields
@@ -334,6 +307,8 @@ def predictions_page():
         "distance_to_center": distance_to_center,
         "dependents_qty": dependents_qty,
         "location_cluster": location_cluster
+        
+        
     }
     
     # Prediction button
@@ -373,46 +348,6 @@ def predictions_page():
                 - **Incentives:** Offer additional support if appropriate
                 - **Feedback:** Learn why they might not be returning
                 """)
-
-            # Add button to print prediction summary
-            if st.button("Print Prediction Summary"):
-                # HTML content for printing
-                prediction_summary = f"""
-                <div id="summary-content">
-                    <h2>Prediction Summary</h2>
-                    <p><strong>Month:</strong> {month}</p>
-                    <p><strong>Total Visits:</strong> {total_visits}</p>
-                    <p><strong>Avg Days Between Pickups:</strong> {avg_days_between_pickups}</p>
-                    <p><strong>Days Since Last Pickup:</strong> {days_since_last_pickup}</p>
-                    <p><strong>Distance to Pickup Location (km):</strong> {distance_to_center}</p>
-                    <p><strong>Dependents Quantity:</strong> {dependents_qty}</p>
-                    <p><strong>Location Cluster:</strong> {location_cluster}</p>
-                    <p><strong>Prediction:</strong> {'Likely to Return' if prediction[0] == 1 else 'Not Likely to Return'}</p>
-                    <p><strong>Probability:</strong> {probability[0][1] if prediction[0] == 1 else probability[0][0]}</p>
-                    <h3>SHAP Feature Importance</h3>
-                    <div id="shap-plot"></div>
-                    <!-- SHAP summary plot can be rendered here using appropriate methods -->
-                </div>
-                """
-                
-                # Add JavaScript to trigger the print dialog
-                print_button_js = """
-                <script>
-                    const printSummary = () => {
-                        var content = document.getElementById("summary-content");
-                        var printWindow = window.open('', '', 'height=500, width=800');
-                        printWindow.document.write(content.innerHTML);
-                        printWindow.document.close();
-                        printWindow.print();
-                    }
-                    printSummary();
-                </script>
-                """
-                
-                # Inject HTML content and JS to trigger the print dialog
-                st.markdown(prediction_summary, unsafe_allow_html=True)
-                st.markdown(print_button_js, unsafe_allow_html=True)
-
 def chatbox():
     # Function to extract text from a preloaded PDF
     
