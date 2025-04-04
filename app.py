@@ -382,7 +382,7 @@ def chatbox():
     #st.title("IFSSA Retention Chatbot")
     st.markdown('<h1 style="color:#E09963; font-size: 2.5em;">IFSSA Retention Chatbot</h1>', unsafe_allow_html=True)
     st.write("Ask questions based on your datasets.")
-    st.write("Some type of questions you can ask include: "What are the preferred languages?", "What are the age groups of clients?", "What are the preferred contact methods?" 
+    st.write("Some type of questions you can ask include: "What are the preferred languages?", "What are the age groups of clients?", "What are the preferred contact methods?")
 
     # Create context from dataset
     context = "\nDataset 1 Preview:\n" + df1.head(5).to_string()
