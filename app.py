@@ -376,8 +376,42 @@ def predictions_page():
 
             # Add button to print prediction summary
             if st.button("Print Prediction Summary"):
-                # Show the prediction summary
-                print_prediction_summary(model, input_data, REQUIRED_COLUMNS, shap_explainer)
+                # HTML content for printing
+                prediction_summary = f"""
+                <div>
+                    <h2>Prediction Summary</h2>
+                    <p><strong>Month:</strong> {month}</p>
+                    <p><strong>Total Visits:</strong> {total_visits}</p>
+                    <p><strong>Avg Days Between Pickups:</strong> {avg_days_between_pickups}</p>
+                    <p><strong>Days Since Last Pickup:</strong> {days_since_last_pickup}</p>
+                    <p><strong>Distance to Pickup Location (km):</strong> {distance_to_center}</p>
+                    <p><strong>Dependents Quantity:</strong> {dependents_qty}</p>
+                    <p><strong>Location Cluster:</strong> {location_cluster}</p>
+                    <p><strong>Prediction:</strong> {'Likely to Return' if prediction[0] == 1 else 'Not Likely to Return'}</p>
+                    <p><strong>Probability:</strong> {probability[0][1] if prediction[0] == 1 else probability[0][0]}</p>
+                    <h3>SHAP Feature Importance</h3>
+                    <div id="shap-plot"></div>
+                    <!-- SHAP summary plot can be rendered here using appropriate methods -->
+                </div>
+                """
+                
+                # Embed JavaScript for triggering the print dialog
+                print_button_js = """
+                <script>
+                    const printSummary = () => {
+                        var content = document.querySelector('div');
+                        var printWindow = window.open('', '', 'height=500, width=800');
+                        printWindow.document.write(content.innerHTML);
+                        printWindow.document.close();
+                        printWindow.print();
+                    }
+                    printSummary();
+                </script>
+                """
+                # Injecting HTML content and JS to trigger print dialog
+                st.markdown(prediction_summary, unsafe_allow_html=True)
+                st.markdown(print_button_js, unsafe_allow_html=True)
+
 def chatbox():
     # Function to extract text from a preloaded PDF
     
