@@ -500,7 +500,7 @@ def print_prediction_summary(model, input_data, required_columns, shap_explainer
 #required_columns = ["feature1", "feature2", "feature3"]  # Your feature columns
 #shap_explainer = shap.KernelExplainer(model.predict_proba, input_data)  # Adjust for your model
 
-print_prediction_summary(model, input_data, required_columns, shap_explainer)
+#print_prediction_summary(model, input_data, required_columns, shap_explainer)
 
 
 if __name__ == "__main__":
