@@ -495,10 +495,10 @@ def print_prediction_summary(model, input_data, required_columns, shap_explainer
 
 # Assuming you have a pre-trained model and SHAP explainer setup
 # Example of how you might call this function
-input_data = [your_input_data]  # Replace with your input data
-model = your_model  # Replace with your model
-required_columns = ["feature1", "feature2", "feature3"]  # Your feature columns
-shap_explainer = shap.KernelExplainer(model.predict_proba, input_data)  # Adjust for your model
+#input_data = [your_input_data]  # Replace with your input data
+#model = your_model  # Replace with your model
+#required_columns = ["feature1", "feature2", "feature3"]  # Your feature columns
+#shap_explainer = shap.KernelExplainer(model.predict_proba, input_data)  # Adjust for your model
 
 print_prediction_summary(model, input_data, required_columns, shap_explainer)
 
