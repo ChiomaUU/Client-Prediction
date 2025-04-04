@@ -291,12 +291,13 @@ def predictions_page():
         distance_to_center = st.number_input("Distance to Pickup Location in Km", 
                                                 min_value=0.1, max_value=20.0, 
                                                 step=0.1, value=5.0)
-        location_cluster = st.number_input("Location Cluster", 
-                                                min_value=1.0, max_value=4.0, 
-                                                step=1.0, value=2.0)
+        
         dependents_qty = st.number_input("Number of Dependents", 
                                                 min_value=1.0, max_value=15.0, 
                                                 step=1.0, value=4.0)
+        location_cluster = st.number_input("Location Cluster", 
+                                                min_value=1.0, max_value=4.0, 
+                                                step=1.0, value=2.0)
     
     input_data = {
         "month": month,
@@ -304,8 +305,9 @@ def predictions_page():
         "avg_days_between_pickups": avg_days_between_pickups,
         "days_since_last_pickup": days_since_last_pickup,
         "distance_to_center": distance_to_center,
-        "location_cluster": location_cluster,
-        "dependents_qty": dependents_qty
+        "dependents_qty": dependents_qty,
+        "location_cluster": location_cluster
+        
         
     }
     
