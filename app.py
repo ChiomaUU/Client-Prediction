@@ -228,10 +228,7 @@ def show_shap_analysis(input_df, prediction, probability):
             
             st.plotly_chart(fig, use_container_width=True)
             
-            # Show feature values
-            #st.write("**Feature Values for This Prediction:**")
-            #feature_values = {f: v for f, v in zip(feature_names, X_processed[0])}
-            #st.json(feature_values)
+            
     
     except Exception as e:
         st.error(f"Error generating explanations: {str(e)}")
@@ -270,7 +267,6 @@ def show_confidence_analysis(probability):
 
 def predictions_page():
     st.markdown('<h1 style="color:#275D43; font-size: 2.5em;">Hamper Return Prediction</h1>', unsafe_allow_html=True)
-    #st.title("Hamper Return Prediction App")
     st.write("Enter details to predict if a client will return.")
     
     # User input fields
@@ -348,6 +344,7 @@ def predictions_page():
                 - **Incentives:** Offer additional support if appropriate
                 - **Feedback:** Learn why they might not be returning
                 """)
+             
 def chatbox():
     # Function to extract text from a preloaded PDF
     
@@ -381,7 +378,7 @@ def chatbox():
             st.error(f"Error generating response: {e}")
             return "Sorry, I couldn't process your request."
 
-    #st.title("IFSSA Retention Chatbot")
+    
     st.markdown('<h1 style="color:#E09963; font-size: 2.5em;">IFSSA Retention Chatbot</h1>', unsafe_allow_html=True)
     st.write("Ask questions based on your datasets.")
     st.write("Some types of questions you can ask include: 'What are the preferred languages?', 'What are the age groups of clients?', 'What are the preferred contact methods?'")
@@ -416,7 +413,6 @@ def dashboard():
     header_image_url = "https://raw.githubusercontent.com/ChiomaUU/Client-Prediction/refs/heads/main/ifssa_2844cc71-4dca-48ae-93c6-43295187e7ca.avif"
     st.image(header_image_url, use_container_width=True)
 
-    #st.title("Hamper Return Prediction App")
     st.write("This app predicts whether a client will return for food hampers using machine learning.")
     
     st.markdown("""
@@ -441,10 +437,10 @@ def main():
     app_page = st.sidebar.radio("Choose a page", ["Dashboard", "Insights", "Predictions", "Chatbox"])
 
     # Debug toggle
-    if st.sidebar.checkbox("Debug mode"):
-        st.session_state.debug = True
-    else:
-        st.session_state.debug = False
+    # if st.sidebar.checkbox("Debug mode"):
+        #st.session_state.debug = True
+    # else:
+        # st.session_state.debug = False
 
     if app_page == "Dashboard":
         dashboard()
