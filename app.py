@@ -314,9 +314,11 @@ def predictions_page():
        
         
     with col2:
+
         distance_to_center = st.number_input("Distance to Pickup Location in Km", 
                                                 min_value=0.1, max_value=20.0, 
                                                 step=0.1, value=5.0)
+        
         dependents_qty = st.number_input("Number of Dependents", 
                                                 min_value=1.0, max_value=15.0, 
                                                 step=1.0, value=4.0)
@@ -357,20 +359,6 @@ def predictions_page():
             # Show confidence analysis
             show_confidence_analysis(probability)
             
-            # Print the summary for features, prediction, and SHAP values
-            try:
-                # Assuming SHAP explainer is available
-                if SHAP_AVAILABLE:
-                    components = get_model_components()
-                    classifier = components['classifier']
-                    if classifier is not None:
-                        explainer = shap.TreeExplainer(classifier)
-                        print_prediction_summary(classifier, input_data, REQUIRED_COLUMNS, explainer)
-                else:
-                    st.warning("SHAP explanations are not available.")
-            except Exception as e:
-                st.error(f"Error generating SHAP analysis: {str(e)}")
-            
             # Recommendation based on prediction
             st.subheader("💡 Recommended Actions")
             if prediction[0] == 1:
@@ -385,6 +373,11 @@ def predictions_page():
                 - **Incentives:** Offer additional support if appropriate
                 - **Feedback:** Learn why they might not be returning
                 """)
+
+            # Add button to print prediction summary
+            if st.button("Print Prediction Summary"):
+                # Show the prediction summary
+                print_prediction_summary(model, input_data, REQUIRED_COLUMNS, shap_explainer)
 def chatbox():
     # Function to extract text from a preloaded PDF
     
