@@ -463,7 +463,7 @@ def main():
     - Provides explainable AI insights
     - Designed for food bank client retention
     """)
- import shap
+ 
 
 def print_prediction_summary(model, input_data, required_columns, shap_explainer):
     # Ensure the input_data is in the correct format (DataFrame with required columns)
