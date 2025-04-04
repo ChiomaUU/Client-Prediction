@@ -190,7 +190,7 @@ def show_shap_analysis(input_df, prediction, probability):
         tab1, tab2 = st.tabs(["Feature Importance", "Prediction Breakdown"])
         
         with tab1:
-            st.write("**Global Feature Importance**")
+            st.write("**Local Feature Importance**")
             fig, ax = plt.subplots(figsize=(10, 6))
             shap.summary_plot(shap_values, X_processed, feature_names=feature_names, plot_type="bar", show=False)
             plt.tight_layout()
