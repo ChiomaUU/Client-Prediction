@@ -378,7 +378,7 @@ def predictions_page():
             if st.button("Print Prediction Summary"):
                 # HTML content for printing
                 prediction_summary = f"""
-                <div>
+                <div id="summary-content">
                     <h2>Prediction Summary</h2>
                     <p><strong>Month:</strong> {month}</p>
                     <p><strong>Total Visits:</strong> {total_visits}</p>
@@ -395,11 +395,11 @@ def predictions_page():
                 </div>
                 """
                 
-                # Embed JavaScript for triggering the print dialog
+                # Add JavaScript to trigger the print dialog
                 print_button_js = """
                 <script>
                     const printSummary = () => {
-                        var content = document.querySelector('div');
+                        var content = document.getElementById("summary-content");
                         var printWindow = window.open('', '', 'height=500, width=800');
                         printWindow.document.write(content.innerHTML);
                         printWindow.document.close();
@@ -408,7 +408,8 @@ def predictions_page():
                     printSummary();
                 </script>
                 """
-                # Injecting HTML content and JS to trigger print dialog
+                
+                # Inject HTML content and JS to trigger the print dialog
                 st.markdown(prediction_summary, unsafe_allow_html=True)
                 st.markdown(print_button_js, unsafe_allow_html=True)
 
