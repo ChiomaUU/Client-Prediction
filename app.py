@@ -250,7 +250,7 @@ def show_confidence_analysis(probability):
             'axis': {'range': [0, 1]},
             'steps': [
                 {'range': [0, 0.3], 'color': "lightgray"},
-                {'range': [0.3, 0.7], 'color': "gray"},-
+                {'range': [0.3, 0.7], 'color': "gray"},
                 {'range': [0.7, 1], 'color': "darkgray"}],
             'threshold': {
                 'line': {'color': "red", 'width': 4},
