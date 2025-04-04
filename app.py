@@ -463,6 +463,45 @@ def main():
     - Provides explainable AI insights
     - Designed for food bank client retention
     """)
+ import shap
+
+def print_prediction_summary(model, input_data, required_columns, shap_explainer):
+    # Ensure the input_data is in the correct format (DataFrame with required columns)
+    input_df = pd.DataFrame(input_data, columns=required_columns)
+
+    # Predict the class probabilities
+    prediction_probs = model.predict_proba(input_df)  # Assuming model.predict_proba() for classification
+    prediction_class = model.predict(input_df)
+
+    # Print the features and their values
+    print("Feature Values:")
+    print(input_df)
+
+    # Print the prediction probability for each class
+    print("\nPrediction Probability:")
+    print(f"Class probabilities: {prediction_probs}")
+
+    # Print the predicted class
+    print(f"\nPredicted Class: {prediction_class}")
+
+    # Calculate and print SHAP feature importance
+    shap_values = shap_explainer.shap_values(input_df)
+    print("\nLocal Feature Importance (SHAP values):")
+    shap.summary_plot(shap_values, input_df)  # Display SHAP summary plot
+
+    # Alternatively, you can print the SHAP values directly
+    for i, feature in enumerate(required_columns):
+        print(f"Feature: {feature}, SHAP Value: {shap_values[0][i]}")
+
+# Assuming you have a pre-trained model and SHAP explainer setup
+# Example of how you might call this function
+input_data = [your_input_data]  # Replace with your input data
+model = your_model  # Replace with your model
+required_columns = ["feature1", "feature2", "feature3"]  # Your feature columns
+shap_explainer = shap.KernelExplainer(model.predict_proba, input_data)  # Adjust for your model
+
+print_prediction_summary(model, input_data, required_columns, shap_explainer)
+
 
 if __name__ == "__main__":
     main()
